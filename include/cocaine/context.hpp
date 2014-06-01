@@ -135,6 +135,9 @@ struct reverse_priority_queue {
     typedef std::priority_queue<T, std::vector<T>, std::greater<T>> type;
 };
 
+/**
+ * @brief Execution context.
+ */
 class context_t {
     COCAINE_DECLARE_NONCOPYABLE(context_t)
 

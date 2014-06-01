@@ -74,6 +74,9 @@ struct repository_error_t:
     { }
 };
 
+/**
+ * @brief Cocaine components holder
+ */
 class repository_t {
     COCAINE_DECLARE_NONCOPYABLE(repository_t)
 
@@ -106,6 +109,18 @@ private:
     open(const std::string& target);
 };
 
+/**
+ * @brief Makes an instance of service
+ * @details Searches for appropriate component factory and calls its `get`
+ *          method to instantiate service.
+ *
+ *          Use insert() to register component factory.
+ *
+ * @param type component type name
+ * @param args arguments to forward to service constructor
+ * @tparam Category component type
+ * @return instance of service
+ */
 template<class Category, typename... Args>
 typename category_traits<Category>::ptr_type
 repository_t::get(const std::string& type, Args&&... args) {
@@ -126,6 +141,31 @@ repository_t::get(const std::string& type, Args&&... args) {
     ).get(std::forward<Args>(args)...);
 }
 
+/**
+ * @brief inserts a factory for a component of type T into repository
+ * @details verifies that string representation of component type corresponds
+ *          to its class, finds and instantinates the component factory.
+ *
+ *          If you develop your own service, you might to call this method
+ *          in your module initialization to add service itself to repository.
+ *          After that any call to get() will create instance of your service.
+ *
+    ~~~{.c}
+    #include "cocaine/service/myservice.hpp"
+
+    using namespace cocaine;
+    using namespace cocaine::service;
+
+    extern "C" {
+        void initialize(api::repository_t& repository) {
+            repository.insert<myservice_t>("myservice");
+        }
+    }
+    ~~~
+ *
+ * @param type component type name
+ * @tparam T component type
+ */
 template<class T>
 void
 repository_t::insert(const std::string& type) {

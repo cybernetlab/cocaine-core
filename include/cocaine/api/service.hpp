@@ -27,6 +27,11 @@
 
 namespace cocaine { namespace api {
 
+/**
+ * @brief Base class for all cocaine services.
+ *
+ * Use it to create your own cocaine service.
+ */
 struct service_t {
     typedef service_t category_type;
 
@@ -45,6 +50,9 @@ protected:
     }
 };
 
+/**
+ * @brief Interface for cocaine services.
+ */
 template<>
 struct category_traits<service_t> {
     typedef std::unique_ptr<service_t> ptr_type;

@@ -73,6 +73,11 @@ struct validate_t {
 
 } // namespace
 
+/**
+ * @brief Loads the repository from storage
+ *
+ * @param path_ path to load repository from
+ */
 void
 repository_t::load(const std::string& path_) {
     const auto path = fs::path(path_);

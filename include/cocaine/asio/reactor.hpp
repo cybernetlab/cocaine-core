@@ -50,6 +50,12 @@
 
 namespace cocaine { namespace io {
 
+/**
+ * @brief Describes basic event oriented functionality for components
+ * @details Event oriented approach implemented via
+ *          [libev](http://software.schmorp.de/pkg/libev.html) library
+ *          ([docs](http://pod.tst.eu/http://cvs.schmorp.de/libev/ev.pod)).
+ */
 struct reactor_t {
     COCAINE_DECLARE_NONCOPYABLE(reactor_t)
 
@@ -75,11 +81,20 @@ struct reactor_t {
         m_loop_queue_pump->stop();
     }
 
+    /**
+     * @brief Runs the event loop
+     */
     void
     run() {
         m_loop->loop();
     }
 
+    /**
+     * @brief Runs the event loop that will stop in `timeout` seconds
+     * @details If the loop stops by timeout it will raise cocaine::error_t
+     *
+     * @param timeout timeout in seconds
+     */
     void
     run_with_timeout(float timeout) {
         update();
@@ -95,11 +110,22 @@ struct reactor_t {
         m_loop->loop();
     }
 
+    /**
+     * @brief Stops the event loop
+     */
     void
     stop() {
         m_loop->unloop(ev::ALL);
     }
 
+    /**
+     * @brief Enqueues a job
+     * @details Inside event loop jobs are extracted from queue and `()`
+     *          operator apllied to each of them.
+     *
+     * @param job job to enqueue.
+     * @tparam T  job class
+     */
     template<class T>
     void
     post(T&& job) {
@@ -116,12 +142,19 @@ struct reactor_t {
         }
     }
 
+    /**
+     * @brief Updates the event loop
+     */
     void
     update() {
         ev_now_update(*m_loop);
     }
 
 public:
+    /**
+     * @brief Returns libev loop instance
+     * @return native libev loop instance
+     */
     native_type&
     native() {
         return *m_loop;
