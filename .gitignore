@@ -4,5 +4,5 @@ include/cocaine/config.hpp
 # Build directory
 build/*
 
-# Documentation
+# Generated documentation
 docs/*
